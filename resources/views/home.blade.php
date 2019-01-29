@@ -20,6 +20,8 @@
             </form>
             <hr>
         </div>
+        <div class="col-md-12" id="response">
+        </div>
 </div>
 @endsection
 
@@ -32,7 +34,44 @@
         margin: auto;
         width: 80%;
     }
-
-
-
 </style>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script>
+    $(function() {
+
+        $.ajax({
+            url: '/tasks',
+            method : 'GET',
+            dataType : 'json',
+        })
+            .done(function(data, status) {
+                let response = data;
+                console.log(response);
+                for (let i in response.data)
+                {
+                    let taskId = response.data[i].id;
+                    let taskName = response.data[i].name;
+                    $('#response').append('<div class="taskLine">'+taskId+' - '+taskName+'</div>');
+                }
+
+                let currentPage = response.current_page;
+                let nextPageUrl = response.next_page_url;
+                let lastPageUrl = response.last_page_url;
+                $('#response').append('<div class="pagination"></div>');
+                if(currentPage !== 1)
+                {
+                    let firstPageUrl  = response.first_page_url;
+                    $('.pagination').append('<li class="page-item"><a class="page-link" href="'+firstPageUrl+'">Previous</a></li>');
+                }
+
+                $('.pagination').append('<li class="page-item"><a class="page-link" href="#">'+currentPage+'</a></li>');
+                $('.pagination').append('<li class="page-item"><a class="page-link" href="'+nextPageUrl+'">Next</a></li>');
+                $('.pagination').append('<li class="page-item"><a class="page-link" href="'+lastPageUrl+'">Last</a></li>');
+
+            })
+            .fail(function (data, status, error) {
+
+            });
+    })
+</script>
