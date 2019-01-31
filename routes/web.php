@@ -15,11 +15,12 @@ Route::get('/', function () {
     return view('home');
 });
 
+Auth::routes();
 
 Route::get('/tasks', 'TaskController@getAllTasks');
-Route::post('/task', 'TaskController@ginsertTask');
+Route::post('/task', 'TaskController@insertTask');
 Route::post('/task/{id}', 'TaskController@deleteTask');
 Route::put('/task/{id}', 'TaskController@updateTask');
-Auth::routes();
+
 
 Route::get('/home', 'HomeController@index')->name('home');
